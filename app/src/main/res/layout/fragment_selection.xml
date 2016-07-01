@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="example.com.findmycar.SelectionFragment">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/fragment_selection_save_spot"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/fragment_selection_middle_element"
+            android:background="@drawable/color_primary_ripple"
+            android:clickable="true"
+            android:elevation="@dimen/elevation"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/icon_marker_white"
+                android:drawablePadding="@dimen/icon_padding"
+                android:fontFamily="sans-serif-light"
+                android:padding="@dimen/default_padding_16"
+                android:text="Park It"
+                android:textColor="@color/white"
+                android:textSize="40sp"/>
+
+            <TextView
+                android:id="@+id/fragment_selection_current_status"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Address Here: Place holder"
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
+
+        </LinearLayout>
+
+        <View
+            android:id="@id/fragment_selection_middle_element"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_centerVertical="true"
+            android:elevation="@dimen/elevation"/>
+
+        <LinearLayout
+            android:id="@+id/fragment_selection_find_car"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/fragment_selection_middle_element"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:elevation="@dimen/elevation"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/icon_arrow_gray"
+                android:drawablePadding="@dimen/icon_padding"
+                android:fontFamily="sans-serif-light"
+                android:text="Find It"
+                android:textSize="40sp"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</FrameLayout>

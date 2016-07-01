@@ -5,9 +5,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,12 +18,10 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-public class SelectionActivity extends AppCompatActivity implements
+public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
-    private LinearLayout saveSpot;
-    private LinearLayout findCar;
-    private TextView currentStatus;
+
 
     private GoogleApiClient googleApiClient;
     private LocationRequest requestCurrentLocation;
@@ -32,29 +30,10 @@ public class SelectionActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_selection);
+        setContentView(R.layout.activity_main);
 
-        saveSpot = (LinearLayout) findViewById(R.id.activity_selection_save_spot);
-        findCar = (LinearLayout) findViewById(R.id.activity_selection_find_car);
-        currentStatus = (TextView) findViewById(R.id.activity_selection_current_status);
-
-        saveSpot.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                System.out.println("clicked!");
-
-            }
-        });
-
-        findCar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-
-            }
-        });
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.activity_main_container, SelectionFragment.newInstance()).commit();
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -81,10 +60,12 @@ public class SelectionActivity extends AppCompatActivity implements
     @Override
     public void onLocationChanged(Location location)
     {
-        currentStatus.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        currentStatus.setText("Latitude: " + location.getLatitude() +
-                ", Logitude: " + location.getLongitude());
-        System.out.println("Location changed");
+        Fragment currentFrag = getSupportFragmentManager().findFragmentById(R.id.activity_main_container);
+        if(currentFrag instanceof SelectionFragment)
+        {
+            ((SelectionFragment) currentFrag).setCurrentStatus(location);
+        }
+
     }
 
 
