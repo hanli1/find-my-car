@@ -19,12 +19,16 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 public class MainActivity extends AppCompatActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener,
+        SelectionFragment.OnDataPass
 {
 
 
     private GoogleApiClient googleApiClient;
     private LocationRequest requestCurrentLocation;
+
+    private Location currentLocation;
+    private Location parkingLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -60,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onLocationChanged(Location location)
     {
+        currentLocation = location;
+
         Fragment currentFrag = getSupportFragmentManager().findFragmentById(R.id.activity_main_container);
         if(currentFrag instanceof SelectionFragment)
         {
@@ -93,5 +99,12 @@ public class MainActivity extends AppCompatActivity implements
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
     {
         Toast.makeText(this, "connection failed", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void setParkingLocation()
+    {
+        parkingLocation = currentLocation;
+        System.out.println("Parkin location set");
     }
 }

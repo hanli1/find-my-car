@@ -1,6 +1,8 @@
 package example.com.findmycar;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -31,6 +33,13 @@ public class SelectionFragment extends Fragment
     private TextView currentStatus;
 
     private Geocoder geocoder;
+    OnDataPass dataPasser;
+
+    @Override
+    public void onAttach(Context c) {
+        super.onAttach(c);
+        dataPasser = (OnDataPass) c;
+    }
 
     public SelectionFragment()
     {
@@ -66,7 +75,7 @@ public class SelectionFragment extends Fragment
             public void onClick(View v)
             {
                 System.out.println("clicked!");
-
+                dataPasser.setParkingLocation();
             }
         });
 
@@ -116,6 +125,10 @@ public class SelectionFragment extends Fragment
 //        if(knownName != null)
 //            ret += knownName + "\n";
         return ret + address + "\n" + city + ", " + state + " " + postalCode;
+    }
+
+    public interface OnDataPass {
+        void setParkingLocation();
     }
 
 }
