@@ -52,26 +52,54 @@
             android:layout_centerVertical="true"
             android:elevation="@dimen/elevation"/>
 
-        <LinearLayout
+
+        <FrameLayout
             android:id="@+id/fragment_selection_find_car"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/fragment_selection_middle_element"
-            android:background="?selectableItemBackground"
-            android:clickable="true"
-            android:elevation="@dimen/elevation"
-            android:gravity="center"
-            android:orientation="vertical">
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
+                android:elevation="@dimen/elevation"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/icon_arrow_gray"
-                android:drawablePadding="@dimen/icon_padding"
-                android:fontFamily="sans-serif-light"
-                android:text="Find It"
-                android:textSize="40sp"/>
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/icon_arrow_gray"
+                    android:drawablePadding="@dimen/icon_padding"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Find It"
+                    android:textSize="40sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/fragment_selection_bottom_reveal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/blue_500_ripple"
+                android:clickable="true"
+                android:elevation="@dimen/elevation"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="invisible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/icon_arrow_white"
+                    android:drawablePadding="@dimen/icon_padding"
+                    android:fontFamily="sans-serif-light"
+                    android:textColor="@color/white"
+                    android:text="Find It"
+                    android:textSize="40sp"/>
+            </LinearLayout>
+        </FrameLayout>
+
     </RelativeLayout>
 
 </FrameLayout>

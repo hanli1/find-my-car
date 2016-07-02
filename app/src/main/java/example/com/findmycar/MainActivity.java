@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity implements
                 .build();
 
         requestCurrentLocation = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(1000)
-                .setFastestInterval(1000);
+                .setInterval(100)
+                .setFastestInterval(100);
 
         mainHandler = new Handler(this.getMainLooper());
 
@@ -126,15 +126,19 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void setParkingLocation()
+    public boolean setParkingLocation()
     {
-        parkingLocation = currentLocation;
         System.out.println("Parkin location set");
+        parkingLocation = currentLocation;
+        return parkingLocation != null;
+
     }
 
     @Override
     public void findMyCar()
     {
+        if(parkingLocation == null)
+            return;
         float distance = currentLocation.distanceTo(parkingLocation);
         float rotation = currentLocation.bearingTo(parkingLocation);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

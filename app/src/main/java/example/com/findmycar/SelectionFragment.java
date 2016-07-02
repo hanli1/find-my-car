@@ -1,6 +1,8 @@
 package example.com.findmycar;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Address;
@@ -8,11 +10,17 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.GeofenceStatusCodes;
 
@@ -29,14 +37,16 @@ import java.util.Locale;
 public class SelectionFragment extends Fragment
 {
     private LinearLayout saveSpot;
-    private LinearLayout findCar;
+    private FrameLayout findCar;
     private TextView currentStatus;
+    private LinearLayout revealView;
 
     private Geocoder geocoder;
     OnDataPass dataPasser;
 
     @Override
-    public void onAttach(Context c) {
+    public void onAttach(Context c)
+    {
         super.onAttach(c);
         dataPasser = (OnDataPass) c;
     }
@@ -66,20 +76,24 @@ public class SelectionFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_selection, container, false);
         saveSpot = (LinearLayout) view.findViewById(R.id.fragment_selection_save_spot);
-        findCar = (LinearLayout) view.findViewById(R.id.fragment_selection_find_car);
+        findCar = (FrameLayout) view.findViewById(R.id.fragment_selection_find_car);
         currentStatus = (TextView) view.findViewById(R.id.fragment_selection_current_status);
+        revealView = (LinearLayout) view.findViewById(R.id.fragment_selection_bottom_reveal);
 
         saveSpot.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                System.out.println("clicked!");
-                dataPasser.setParkingLocation();
+                if(dataPasser.setParkingLocation())
+                    circleRevealBottomPanel();
+                else
+                    Toast.makeText(getActivity(), "No parking location set", Toast.LENGTH_LONG).show();
             }
         });
 
-        findCar.setOnClickListener(new View.OnClickListener() {
+
+        revealView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
@@ -127,9 +141,37 @@ public class SelectionFragment extends Fragment
         return ret + address + "\n" + city + ", " + state + " " + postalCode;
     }
 
-    public interface OnDataPass {
-        void setParkingLocation();
+    public interface OnDataPass
+    {
+        boolean setParkingLocation();
+
         void findMyCar();
+    }
+
+    private void circleRevealBottomPanel()
+    {
+        if(revealView.getVisibility() == View.VISIBLE)
+            return;
+        Animator animator = ViewAnimationUtils.createCircularReveal(
+                revealView,
+                revealView.getWidth() / 2,
+                0, 0,
+                revealView.getWidth());
+
+        animator.addListener(new AnimatorListenerAdapter()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                //mRevealView.setBackgroundColor(getResources().getColor(toColor));
+            }
+        });
+
+        //mRevealBackgroundView.setBackgroundColor(getResources().getColor(fromColor));
+        animator.setInterpolator(new FastOutSlowInInterpolator());
+        animator.setDuration(500);
+        animator.start();
+        revealView.setVisibility(View.VISIBLE);
     }
 
 }
