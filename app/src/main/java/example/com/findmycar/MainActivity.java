@@ -3,9 +3,11 @@ package example.com.findmycar;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private GoogleApiClient googleApiClient;
     private LocationRequest requestCurrentLocation;
+    // Get a handler that can be used to post to the main thread
+    private Handler mainHandler;
 
     private Location currentLocation;
     private Location parkingLocation;
@@ -49,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements
                 .setInterval(1000)
                 .setFastestInterval(1000);
 
+        mainHandler = new Handler(this.getMainLooper());
+
     }
     protected void onStart() {
         googleApiClient.connect();
@@ -66,10 +72,28 @@ public class MainActivity extends AppCompatActivity implements
     {
         currentLocation = location;
 
-        Fragment currentFrag = getSupportFragmentManager().findFragmentById(R.id.activity_main_container);
+        final Fragment currentFrag = getSupportFragmentManager().findFragmentById(R.id.activity_main_container);
         if(currentFrag instanceof SelectionFragment)
         {
             ((SelectionFragment) currentFrag).setCurrentStatus(location);
+        }
+        else if(currentFrag instanceof DirectionFragment)
+        {
+            if(parkingLocation == null)
+            {
+                Toast.makeText(MainActivity.this, "Press Park It first", Toast.LENGTH_LONG).show();
+                return;
+            }
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    float distance = currentLocation.distanceTo(parkingLocation);
+                    float rotation = currentLocation.bearingTo(parkingLocation);
+                    ((DirectionFragment) currentFrag).updateUI(distance, rotation);
+                }
+            };
+            mainHandler.post(myRunnable);
+
         }
 
     }
@@ -106,5 +130,17 @@ public class MainActivity extends AppCompatActivity implements
     {
         parkingLocation = currentLocation;
         System.out.println("Parkin location set");
+    }
+
+    @Override
+    public void findMyCar()
+    {
+        float distance = currentLocation.distanceTo(parkingLocation);
+        float rotation = currentLocation.bearingTo(parkingLocation);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out,
+                android.R.anim.fade_in, android.R.anim.fade_out);
+        fragmentTransaction.replace(R.id.activity_main_container,
+                DirectionFragment.newInstance(distance, rotation)).addToBackStack("tag").commit();
     }
 }

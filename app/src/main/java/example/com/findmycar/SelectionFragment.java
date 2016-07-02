@@ -83,7 +83,7 @@ public class SelectionFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-
+                dataPasser.findMyCar();
             }
         });
 
@@ -129,6 +129,7 @@ public class SelectionFragment extends Fragment
 
     public interface OnDataPass {
         void setParkingLocation();
+        void findMyCar();
     }
 
 }
