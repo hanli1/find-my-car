@@ -56,14 +56,26 @@ public class MainActivity extends AppCompatActivity implements
         mainHandler = new Handler(this.getMainLooper());
 
     }
+    protected void onResume()
+    {
+        if(googleApiClient.isConnected())
+            onConnected(null);
+        super.onResume();
+    }
+    protected void onPause()
+    {
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                googleApiClient, this);
+        super.onPause();
+    }
     protected void onStart() {
-        googleApiClient.connect();
         super.onStart();
+        googleApiClient.connect();
     }
 
     protected void onStop() {
-        googleApiClient.disconnect();
         super.onStop();
+        googleApiClient.disconnect();
     }
 
 

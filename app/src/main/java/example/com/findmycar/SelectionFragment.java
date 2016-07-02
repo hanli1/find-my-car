@@ -3,6 +3,9 @@ package example.com.findmycar;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Address;
@@ -10,6 +13,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -151,27 +155,23 @@ public class SelectionFragment extends Fragment
     private void circleRevealBottomPanel()
     {
         if(revealView.getVisibility() == View.VISIBLE)
-            return;
-        Animator animator = ViewAnimationUtils.createCircularReveal(
-                revealView,
-                revealView.getWidth() / 2,
-                0, 0,
-                revealView.getWidth());
-
-        animator.addListener(new AnimatorListenerAdapter()
         {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                //mRevealView.setBackgroundColor(getResources().getColor(toColor));
-            }
-        });
+            Utilities.darkenThenLightenAnimation(getActivity(), revealView).start();
+        }
+        else
+        {
+            Animator animator = ViewAnimationUtils.createCircularReveal(
+                    revealView,
+                    revealView.getWidth() / 2,
+                    0, 0,
+                    revealView.getWidth());
 
-        //mRevealBackgroundView.setBackgroundColor(getResources().getColor(fromColor));
-        animator.setInterpolator(new FastOutSlowInInterpolator());
-        animator.setDuration(500);
-        animator.start();
-        revealView.setVisibility(View.VISIBLE);
+            //mRevealBackgroundView.setBackgroundColor(getResources().getColor(fromColor));
+            animator.setInterpolator(Utilities.fastOutSlowInInterpolator);
+            animator.setDuration(500);
+            animator.start();
+            revealView.setVisibility(View.VISIBLE);
+        }
     }
 
 }
