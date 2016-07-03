@@ -101,5 +101,13 @@
         </FrameLayout>
 
     </RelativeLayout>
-
+    <ImageView
+        android:id="@+id/fragment_selection_bubble"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bubble_background"
+        android:elevation="8dp"
+        android:visibility="invisible"
+        android:layout_gravity="center"
+        />
 </FrameLayout>

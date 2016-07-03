@@ -75,7 +75,7 @@ public class DirectionFragment extends Fragment
         ObjectAnimator imageViewObjectAnimator = ObjectAnimator.ofFloat(this.arrow ,
                 "rotation", this.arrow.getRotation(), rotation);
         imageViewObjectAnimator.setInterpolator(new FastOutSlowInInterpolator());
-        imageViewObjectAnimator.setDuration(700); // miliseconds
+        imageViewObjectAnimator.setDuration(500); // miliseconds
         imageViewObjectAnimator.start();
     }
 

@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Path;
+import android.graphics.PathMeasure;
 import android.renderscript.Sampler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -86,4 +88,5 @@ public class Utilities
         });
         return darkenColorAnimation;
     }
+
 }
