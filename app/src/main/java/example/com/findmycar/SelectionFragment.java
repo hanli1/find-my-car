@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -121,6 +122,8 @@ public class SelectionFragment extends Fragment
         });
 
         animatingBubble = false;
+
+        //wait for layout to get x and y
         view.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener()
                 {
@@ -208,7 +211,10 @@ public class SelectionFragment extends Fragment
         float currY = bubble.getY();
         Path curve = new Path();
         curve.moveTo(currX, currY);
-        curve.cubicTo(currX, currY, currX + 250, currY + 250, currX, currY + 500);
+        //2 control points and then end point
+        curve.cubicTo(currX, currY,
+                currX + 500, currY + 500,
+                currX, currY + 500);
         final PathMeasure pathMeasure = new PathMeasure(curve, false);
 
         final float length = pathMeasure.getLength();
@@ -217,7 +223,7 @@ public class SelectionFragment extends Fragment
         final ValueAnimator movementAnimation = ValueAnimator.ofObject(new FloatEvaluator(),
                 0, 1);
         movementAnimation.setInterpolator(Utilities.fastOutSlowInInterpolator);
-        movementAnimation.setDuration(500); // milliseconds
+        movementAnimation.setDuration(750); // milliseconds
 
         movementAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
@@ -240,15 +246,16 @@ public class SelectionFragment extends Fragment
             @Override
             public void onAnimationStart(Animator animation)
             {
-                bubble.animate().alpha(1).setDuration(100);
                 bubble.setVisibility(View.VISIBLE);
+                bubble.animate().alpha(1).setDuration(250);
                 animatingBubble = true;
             }
 
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                bubble.animate().alpha(0).setDuration(100).withEndAction(new Runnable()
+                circleRevealBottomPanel();
+                bubble.animate().alpha(0).setDuration(250).withEndAction(new Runnable()
                 {
                     @Override
                     public void run()
@@ -257,11 +264,12 @@ public class SelectionFragment extends Fragment
                         //bubble.setScaleX(1);
                         bubble.setX(bubbleInitialX);
                         bubble.setY(bubbleInitialY);
-                        circleRevealBottomPanel();
+                        animatingBubble = false;
+
                     }
                 });
 
-                animatingBubble = false;
+
             }
 
             @Override
